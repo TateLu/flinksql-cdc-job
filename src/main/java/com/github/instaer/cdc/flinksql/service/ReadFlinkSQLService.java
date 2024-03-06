@@ -74,7 +74,11 @@ public class ReadFlinkSQLService implements ApplicationRunner {
             jobExecutor.execute(() -> {
                 try {
                     List<String> segmentSQLs = read(file);
+                    if(segmentSQLs.isEmpty()){
+                        return;
+                    }
                     executeFlinkSQLService.execute(FilenameUtils.getBaseName(file.getName()), segmentSQLs);
+                    log.info("submit a file : "+file.getName());
                 } catch (Exception e) {
                     log.error("Read file:" + file.getName() + " failed, ", e);
                 }
@@ -82,6 +86,7 @@ public class ReadFlinkSQLService implements ApplicationRunner {
         }
     }
 
+    private static final String SKIP = "skip";
     @SneakyThrows
     private List<String> read(File file) {
         List<String> segmentSQLs = new ArrayList<>();
@@ -95,6 +100,9 @@ public class ReadFlinkSQLService implements ApplicationRunner {
         for (String line : lines) {
             line = line.trim();
             if (line.isEmpty() || line.startsWith("--")) {
+                if(line.contains(SKIP)){
+                    return Collections.emptyList();
+                }
                 continue;
             }
 

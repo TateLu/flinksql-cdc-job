@@ -1,3 +1,7 @@
+
+--skip 跳过本文件
+
+
 CREATE TABLE `COINSDETAIL`
 (
     `ID`                  INT,

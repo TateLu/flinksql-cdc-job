@@ -1,3 +1,5 @@
+--skip 跳过本文件
+
 CREATE TABLE t_user
 (
     id          INT,
